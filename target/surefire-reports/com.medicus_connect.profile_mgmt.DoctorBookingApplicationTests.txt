@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.medicus_connect.profile_mgmt.DoctorBookingApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.242 s -- in com.medicus_connect.profile_mgmt.DoctorBookingApplicationTests

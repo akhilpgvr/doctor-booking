@@ -1,0 +1,4 @@
+com\medicus_connect\doctor_booking\configuration\ModelMapperConfig.class
+com\medicus_connect\doctor_booking\configuration\OpenApiConfig.class
+com\medicus_connect\profile_mgmt\DoctorBookingApplication.class
+com\medicus_connect\profile_mgmt\Helper.class
