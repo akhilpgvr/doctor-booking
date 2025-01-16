@@ -21,19 +21,19 @@ public class BookingController {
     @Autowired
     private AppointmentService appointmentService;
 
-    @Operation(summary = "", description = "")
+    @Operation(summary = "", description = "Endpoint to make an appointment")
     @PostMapping("/book-appoint")
     public ResponseEntity<String> bookAppointment(@RequestBody BookAppointmentRequest bookAppointmentRequest) {
         return new ResponseEntity<>(appointmentService.bookDoctor(bookAppointmentRequest), HttpStatus.OK);
     }
 
-    @Operation(summary = "", description = "")
+    @Operation(summary = "", description = "Endpoint to get list of appointments by month")
     @PostMapping("/get-appoint")
     public ResponseEntity<List<GetAppointmentResponse>> getAppointment(@RequestBody GetAppointmentRequest getAppointmentRequest) {
         return new ResponseEntity<>(appointmentService.getBookings(getAppointmentRequest), HttpStatus.OK);
     }
 
-    @Operation(summary = "", description = "")
+    @Operation(summary = "", description = "Endpoint to delete an appointment")
     @GetMapping("/delete-appoint")
     public ResponseEntity<String> deleteAppointment(String month) {
         return new ResponseEntity<>(appointmentService.deleteAppointment(), HttpStatus.OK);
