@@ -55,6 +55,9 @@ public class AppointmentService {
         log.info("Doctor verification using doctorId: {}", request.getDoctorId());
         getDoctorByDoctorId(request.getDoctorId());
 
+        log.info("Checking booking already exists for doctor: {}", request.getDoctorId());
+        doesBookingExists(request.getDoctorId(), request.getBookingDate(), request.getStartTime(), request.getEndTime());
+
         AppointmentEntity booking = new AppointmentEntity();
         BeanUtils.copyProperties(request, booking);
         booking.setCreatedOn(LocalDateTime.now());
@@ -115,5 +118,9 @@ public class AppointmentService {
 
     public String deleteAppointment() {
         return "";
+    }
+
+    public boolean doesBookingExists(String doctorId, Date appointDate, int startTime, int endTime){
+        return false;
     }
 }
