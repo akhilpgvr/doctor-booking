@@ -17,8 +17,16 @@ spring:
       database: medicus-connect
       uri: mongodb://localhost:27017
 
-  config:
-    rest:
-      service:
-        user-url: "http://localhost:9990/user/mgmt/v1"
-        bus-url: "http://localhost:9991/bus/mgmt/v1"
+config:
+  rest:
+    service:
+      user-url: "http://localhost:9990/user/mgmt/v1"
+      profile-url: "http://localhost:9991/bus/mgmt/v1"
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
