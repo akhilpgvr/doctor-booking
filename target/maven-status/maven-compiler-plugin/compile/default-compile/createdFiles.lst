@@ -1,4 +1,11 @@
 com\medicus_connect\doctor_booking\configuration\ModelMapperConfig.class
+com\medicus_connect\doctor_booking\model\dtos\response\GetAppointmentResponse.class
+com\medicus_connect\doctor_booking\DoctorBookingApplication.class
+com\medicus_connect\doctor_booking\model\dtos\request\BookAppointmentRequest.class
+com\medicus_connect\doctor_booking\service\AppointmentService.class
 com\medicus_connect\doctor_booking\configuration\OpenApiConfig.class
-com\medicus_connect\profile_mgmt\DoctorBookingApplication.class
-com\medicus_connect\profile_mgmt\Helper.class
+com\medicus_connect\doctor_booking\Helper.class
+com\medicus_connect\doctor_booking\model\dtos\request\GetAppointmentRequest.class
+com\medicus_connect\doctor_booking\repo\AppointmentRepo.class
+com\medicus_connect\doctor_booking\controller\BookingController.class
+com\medicus_connect\doctor_booking\model\entity\AppointmentEntity.class

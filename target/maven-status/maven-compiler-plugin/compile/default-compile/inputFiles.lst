@@ -1,4 +1,11 @@
 C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\configuration\ModelMapperConfig.java
 C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\configuration\OpenApiConfig.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\controller\BookingController.java
 C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\DoctorBookingApplication.java
 C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\Helper.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\model\dtos\request\BookAppointmentRequest.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\model\dtos\request\GetAppointmentRequest.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\model\dtos\response\GetAppointmentResponse.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\model\entity\AppointmentEntity.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\repo\AppointmentRepo.java
+C:\workspace\medicusConnect\doctor-booking\src\main\java\com\medicus_connect\doctor_booking\service\AppointmentService.java

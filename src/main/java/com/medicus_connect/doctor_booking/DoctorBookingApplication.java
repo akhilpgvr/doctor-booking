@@ -1,4 +1,4 @@
-package com.medicus_connect.profile_mgmt;
+package com.medicus_connect.doctor_booking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
