@@ -4,8 +4,11 @@ import ch.qos.logback.core.util.StringUtil;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
+import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
+import com.medicus_connect.doctor_booking.model.dtos.response.GetUserResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
+import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -28,12 +31,29 @@ public class AppointmentService {
     private AppointmentRepo appointmentRepo;
 
     @Autowired
+    private ProfileMgmtClient profileClient;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     @Autowired
     private ModelMapper modelMapper;
 
+    public GetUserResponse getUserByUserId(String userId){
+        log.info("Calling ProfileClient for user: {}", userId);
+        return profileClient.getUserAccount(userId).getBody();
+    }
+
+    public GetDoctorResponse getDoctorByDoctorId(String doctorId){
+        log.info("Calling ProfileClient for doctor: {}", doctorId);
+        return profileClient.getDoctorAccount(doctorId).getBody();
+    }
     public String bookDoctor(BookAppointmentRequest request) {
+
+        log.info("User verification using userId: {}", request.getUserId());
+        getUserByUserId(request.getUserId());
+        log.info("Doctor verification using doctorId: {}", request.getDoctorId());
+        getDoctorByDoctorId(request.getDoctorId());
 
         AppointmentEntity booking = new AppointmentEntity();
         BeanUtils.copyProperties(request, booking);
@@ -48,6 +68,11 @@ public class AppointmentService {
 
 
     public List<GetAppointmentResponse> getBookings(GetAppointmentRequest request) {
+
+        log.info("User verification using userId: {}", request.getUserId());
+        getUserByUserId(request.getUserId());
+        log.info("Doctor verification using doctorId: {}", request.getDoctorId());
+        getDoctorByDoctorId(request.getDoctorId());
 
         // Get the current year
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
