@@ -20,8 +20,7 @@ spring:
 config:
   rest:
     service:
-      user-url: "http://localhost:9990/user/mgmt/v1"
-      profile-url: "http://localhost:9991/bus/mgmt/v1"
+      profile-url: "http://localhost:8001/profile/v1"
 
 feign:
   client:
