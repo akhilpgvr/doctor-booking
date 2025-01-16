@@ -28,7 +28,7 @@ public class BookingController {
     }
 
     @Operation(summary = "", description = "")
-    @GetMapping("/get-appoint")
+    @PostMapping("/get-appoint")
     public ResponseEntity<List<GetAppointmentResponse>> getAppointment(@RequestBody GetAppointmentRequest getAppointmentRequest) {
         return new ResponseEntity<>(appointmentService.getBookings(getAppointmentRequest), HttpStatus.OK);
     }

@@ -77,7 +77,7 @@ public class AppointmentService {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(request.getUserId()));
         if(!StringUtil.isNullOrEmpty(request.getDoctorId())) query.addCriteria(Criteria.where("doctorId").is(request.getDoctorId()));
-        query.addCriteria(Criteria.where("date").gte(startDate).lte(endDate));
+        query.addCriteria(Criteria.where("bookingDate").gte(startDate).lte(endDate));
 
         // Execute the query
         List<AppointmentEntity> docAvailList = mongoTemplate.find(query, AppointmentEntity.class);
