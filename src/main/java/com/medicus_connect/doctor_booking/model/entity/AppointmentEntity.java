@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Data
@@ -24,8 +25,8 @@ public class AppointmentEntity {
     private String patientName;
     private String doctorId;
     private Date bookingDate;
-    private int startTime;
-    private int endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     private LocalDateTime createdOn;
     private String createdBy;

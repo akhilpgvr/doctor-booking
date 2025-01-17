@@ -15,6 +15,8 @@ public class BookAppointmentRequest {
     private String patientName;
     private String doctorId;
     private Date bookingDate;
-    private int startTime;
-    private int endTime;
+    private int startTimeHour;
+    private int startTimeMinute;
+    private int endTimeHour;
+    private int endTimeMinute;
 }

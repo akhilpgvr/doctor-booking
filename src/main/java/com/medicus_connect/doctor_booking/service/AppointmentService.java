@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -55,11 +56,16 @@ public class AppointmentService {
         log.info("Doctor verification using doctorId: {}", request.getDoctorId());
         getDoctorByDoctorId(request.getDoctorId());
 
+
+        LocalTime startTime = LocalTime.of(request.getStartTimeHour(), request.getStartTimeMinute());
+        LocalTime endTime = LocalTime.of(request.getEndTimeHour(), request.getEndTimeMinute());
         log.info("Checking booking already exists for doctor: {}", request.getDoctorId());
-        doesBookingExists(request.getDoctorId(), request.getBookingDate(), request.getStartTime(), request.getEndTime());
+        doesBookingExists(request.getDoctorId(), request.getBookingDate(),  startTime, endTime);
 
         AppointmentEntity booking = new AppointmentEntity();
         BeanUtils.copyProperties(request, booking);
+        booking.setStartTime(startTime);
+        booking.setEndTime(endTime);
         booking.setCreatedOn(LocalDateTime.now());
         booking.setCreatedBy(request.getUserId());
         booking.setUpdatedOn(LocalDateTime.now());
@@ -120,7 +126,7 @@ public class AppointmentService {
         return "";
     }
 
-    public boolean doesBookingExists(String doctorId, Date appointDate, int startTime, int endTime){
+    public boolean doesBookingExists(String doctorId, Date appointDate, LocalTime startTime, LocalTime endTime){
         return false;
     }
 }

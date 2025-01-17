@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 @Data
@@ -15,6 +16,6 @@ public class GetAppointmentResponse {
     private String patientName;
     private String doctorId;
     private Date bookingDate;
-    private int startTime;
-    private int endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }

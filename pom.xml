@@ -80,6 +80,13 @@
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>4.1.2</version>
 		</dependency>
+
+		<!--Java LocalTime -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
