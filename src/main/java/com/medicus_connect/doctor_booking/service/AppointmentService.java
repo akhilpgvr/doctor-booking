@@ -1,6 +1,7 @@
 package com.medicus_connect.doctor_booking.service;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.medicus_connect.doctor_booking.exceptions.SlotNotAvailableException;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
@@ -60,7 +61,10 @@ public class AppointmentService {
         LocalTime startTime = LocalTime.of(request.getStartTimeHour(), request.getStartTimeMinute());
         LocalTime endTime = LocalTime.of(request.getEndTimeHour(), request.getEndTimeMinute());
         log.info("Checking booking already exists for doctor: {}", request.getDoctorId());
-        doesBookingExists(request.getDoctorId(), request.getBookingDate(),  startTime, endTime);
+        if(doesBookingExists(request.getDoctorId(), request.getBookingDate(),  startTime, endTime)) {
+            log.error("Booking exists fo this time for: {}", request.getUserId());
+            throw new SlotNotAvailableException("Slot Not Available");
+        }
 
         AppointmentEntity booking = new AppointmentEntity();
         BeanUtils.copyProperties(request, booking);
@@ -126,7 +130,13 @@ public class AppointmentService {
         return "";
     }
 
-    public boolean doesBookingExists(String doctorId, Date appointDate, LocalTime startTime, LocalTime endTime){
-        return false;
+    public boolean doesBookingExists(String doctorId, Date bookingDate, LocalTime startTime, LocalTime endTime){
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("doctorId").is(doctorId));
+        query.addCriteria(Criteria.where("bookingDate").is(bookingDate));
+        query.addCriteria(new Criteria().orOperator(Criteria.where("startTime").gte(startTime).lte(endTime), Criteria.where("endTime").gte(startTime).lte(endTime)));
+        List<AppointmentEntity> docAvailList = mongoTemplate.find(query, AppointmentEntity.class);
+        return !docAvailList.isEmpty();
     }
 }
