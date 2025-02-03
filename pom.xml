@@ -12,7 +12,7 @@
 	<artifactId>doctor-booking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>doctor-booking</name>
-	<description>User management for Medicus Connect</description>
+	<description>Booking management for Medicus Connect</description>
 	<url/>
 	<licenses>
 		<license/>
