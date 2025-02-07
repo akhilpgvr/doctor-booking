@@ -1,17 +1,18 @@
 package com.medicus_connect.doctor_booking.controller;
 
-import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
-import com.medicus_connect.doctor_booking.model.dtos.response.GetUserResponse;
+import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
+import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
+import com.medicus_connect.doctor_booking.service.EmergencyCaseService;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -20,19 +21,16 @@ public class UtilityController {
 
     @Autowired
     private ProfileMgmtClient profileMgmtClient;
-    @Operation(summary = "Api for getting user by userId", description = "")
-    @GetMapping("/get-by-userid")
-    public ResponseEntity<GetUserResponse> getUserAccount(@RequestParam String userId) {
+    @Autowired
+    private EmergencyCaseService emergencyCaseService;
 
-        log.info("Calling UserService for fetching an account for: {}", userId);
-        return new ResponseEntity<>(profileMgmtClient.getUserAccount(userId).getBody(), HttpStatus.OK);
+    @GetMapping("/get-delayed-bookings")
+    public ResponseEntity<List<AppointmentEntity>> getDelayedAppointmentList(){
+        return new ResponseEntity<>(emergencyCaseService.getDelayedAppointmentList(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Api for getting doctor by doctorId", description = "")
-    @GetMapping("/get-by-doctorid")
-    public ResponseEntity<GetDoctorResponse> getDoctorAccount(@RequestParam String doctorId) {
-
-        log.info("Calling DoctorService for fetching an account for: {}", doctorId);
-        return new ResponseEntity<>(profileMgmtClient.getDoctorAccount(doctorId).getBody(), HttpStatus.OK);
+    @GetMapping("/get-emergency-cases")
+    public ResponseEntity<List<EmergencyCaseEntity>> getEmergencyCases(){
+        return new ResponseEntity<>(emergencyCaseService.getEmergencyCases(), HttpStatus.OK);
     }
 }

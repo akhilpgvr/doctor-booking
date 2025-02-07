@@ -16,6 +16,9 @@ import java.util.List;
 public class GetDoctorResponse {
 
     public String mobileNo;
+    private String department; //one time value -- cannot be updated
+    private String haveRegNo;
+    private String regNo;
     public PersonalInfo doctorInfo;
     public List<EducationalDetails> educationalDetails;
     public List<ExperienceDetails> experienceDetails;
