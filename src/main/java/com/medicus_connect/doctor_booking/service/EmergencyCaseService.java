@@ -1,19 +1,25 @@
 package com.medicus_connect.doctor_booking.service;
 
+import com.medicus_connect.doctor_booking.enums.MessageContentTypeEnum;
 import com.medicus_connect.doctor_booking.model.common.AddEmergencyCaseRequest;
+import com.medicus_connect.doctor_booking.model.common.EmailData;
+import com.medicus_connect.doctor_booking.model.dtos.request.MessageRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
 import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
 import com.medicus_connect.doctor_booking.repo.EmergencyCaseRepo;
+import com.medicus_connect.doctor_booking.service.client.MessagingClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +40,9 @@ public class EmergencyCaseService {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private MessagingClient messagingClient;
 
 
     public String addEmergencyCases(AddEmergencyCaseRequest request) {
@@ -80,32 +89,43 @@ public class EmergencyCaseService {
         return emergencyCaseRepo.findByAdmitDateRangeAndMsgSend(startOfDay, endOfDay,false);
     }
 
-
-    public void sendDelayMessage(){
-
-        //Todo Akhil --
+    @Scheduled(cron = "0 */3 * * * ?")
+    public void sendDelayMessage() {
 
         //getEmergencyCases
         log.info("Fetching all emergency cases");
         List<EmergencyCaseEntity> emergencyCases = getEmergencyCases();
 
-        CompletableFuture.runAsync(()-> {
-
-            emergencyCases.forEach(i->{
-
-                //get delay time -- assume to be get in minutes
-                int minutesDelay = getDelayTime(i);
-                //getDelayedAppointmentList
-                List<AppointmentEntity> delayedAppointments = appointmentService.getDelayedAppointmentList(i.getDoctorId());
-
-                delayedAppointments.forEach(k->{
-
+        emergencyCases.forEach(i -> {
+            //get delay time -- assume to be get in minutes
+            int minutesDelay = getDelayTime(i);
+            //getDelayedAppointmentList
+            List<AppointmentEntity> delayedAppointments = appointmentService.getDelayedAppointmentList(i.getDoctorId());
+            delayedAppointments.forEach(k -> {
+                CompletableFuture.runAsync(() -> {
                     //call mail service via kafka
+                    MessageRequest request = new MessageRequest();
+                    EmailData emailData = new EmailData();
+                    emailData.setMailId(k.getUserMailId());
+                    emailData.setPatientName(k.getPatientName());
+                    emailData.setDoctorName(i.getDoctorName());
+                    emailData.setAppointDate(new Date());
+                    emailData.setAppointTime(k.getStartTime().toString());
+                    emailData.setNewAppointTime(k.getStartTime().plusMinutes(minutesDelay).toString());
+                    request.getEmailDataList().add(emailData);
+                    request.setContentCode(MessageContentTypeEnum.DELAY.getDescription());
+                    messagingClient.sendTextEmail(request);
+                    log.info("Email send to {}", k.getUserMailId());
 
                     //save new appointment time; -- then only it can be updated in a proper way
                     k.setStartTime(k.getStartTime().plusMinutes(minutesDelay));
                     k.setEndTime(k.getEndTime().plusMinutes(minutesDelay));
                     appointmentRepo.save(k);
+                    log.info("updated appointment entity with new appointment time");
+                    //make msgSend true and update the entity
+                    i.setMsgSend(true);
+                    emergencyCaseRepo.save(i);
+                    log.info("updated msgSend in emergency case entity");
                 });
             });
         });

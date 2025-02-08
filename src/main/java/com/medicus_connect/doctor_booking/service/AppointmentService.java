@@ -53,7 +53,7 @@ public class AppointmentService {
     public String bookDoctor(BookAppointmentRequest request) {
 
         log.info("User verification using userId: {}", request.getUserId());
-        getUserByUserId(request.getUserId());
+        GetUserResponse userInfo = getUserByUserId(request.getUserId());
         log.info("Doctor verification using doctorId: {}", request.getDoctorId());
         getDoctorByDoctorId(request.getDoctorId());
 
@@ -68,6 +68,7 @@ public class AppointmentService {
 
         AppointmentEntity booking = new AppointmentEntity();
         BeanUtils.copyProperties(request, booking);
+        booking.setUserMailId(userInfo.getUserInfo().getEmail());
         booking.setStartTime(startTime);
         booking.setEndTime(endTime);
         booking.setCreatedOn(LocalDateTime.now());

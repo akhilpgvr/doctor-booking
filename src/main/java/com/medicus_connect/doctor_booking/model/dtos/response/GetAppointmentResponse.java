@@ -13,6 +13,7 @@ import java.util.Date;
 public class GetAppointmentResponse {
 
     private String userId;
+    private String userMailId;
     private String patientName;
     private String doctorId;
     private Date bookingDate;

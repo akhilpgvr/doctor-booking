@@ -21,6 +21,7 @@ config:
   rest:
     service:
       profile-url: "http://localhost:8001/profile/v1"
+      messaging-url: "http://localhost:8007/messaging/v1"
 
 feign:
   client:

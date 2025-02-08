@@ -34,4 +34,10 @@ public class UtilityController {
     public ResponseEntity<List<EmergencyCaseEntity>> getEmergencyCases(){
         return new ResponseEntity<>(emergencyCaseService.getEmergencyCases(), HttpStatus.OK);
     }
+
+    @GetMapping("/send-delay-msg")
+    public ResponseEntity<String> sendDelayMsg(){
+        emergencyCaseService.sendDelayMessage();
+        return new ResponseEntity<>("Message Send", HttpStatus.OK);
+    }
 }

@@ -22,6 +22,7 @@ public class AppointmentEntity {
     private String id;
 
     private String userId;
+    private String userMailId;
     private String patientName;
     private String doctorId;
     private Date bookingDate;
