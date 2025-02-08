@@ -2,15 +2,14 @@ package com.medicus_connect.doctor_booking.controller;
 
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
+import com.medicus_connect.doctor_booking.service.AppointmentService;
 import com.medicus_connect.doctor_booking.service.EmergencyCaseService;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,10 +22,12 @@ public class UtilityController {
     private ProfileMgmtClient profileMgmtClient;
     @Autowired
     private EmergencyCaseService emergencyCaseService;
+    @Autowired
+    private AppointmentService appointmentService;
 
-    @GetMapping("/get-delayed-bookings")
-    public ResponseEntity<List<AppointmentEntity>> getDelayedAppointmentList(){
-        return new ResponseEntity<>(emergencyCaseService.getDelayedAppointmentList(), HttpStatus.OK);
+    @PostMapping("/get-delayed-bookings")
+    public ResponseEntity<List<AppointmentEntity>> getDelayedAppointmentList(@RequestBody String doctorIds){
+        return new ResponseEntity<>(appointmentService.getDelayedAppointmentList(doctorIds), HttpStatus.OK);
     }
 
     @GetMapping("/get-emergency-cases")

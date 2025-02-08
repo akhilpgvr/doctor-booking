@@ -139,4 +139,33 @@ public class AppointmentService {
         List<AppointmentEntity> docAvailList = mongoTemplate.find(query, AppointmentEntity.class);
         return !docAvailList.isEmpty();
     }
+
+    public List<AppointmentEntity> getDelayedAppointmentList(String doctorId) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+
+        // Set to start of the day (00:00:00)
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date startOfDay = calendar.getTime();
+
+        // Set to end of the day (23:59:59)
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        Date endOfDay = calendar.getTime();
+
+        // Fetch appointments for the given day and doctors
+
+        Query query = new Query();
+        log.info("Adding booking range from {} to {} in bookingDate", startOfDay, endOfDay);
+        query.addCriteria(Criteria.where("bookingDate").gte(startOfDay).lt(endOfDay));
+        log.info("Adding doctorIds for checking criteria");
+        query.addCriteria(Criteria.where("doctorId").is(doctorId));
+
+        return mongoTemplate.find(query, AppointmentEntity.class);
+    }
 }

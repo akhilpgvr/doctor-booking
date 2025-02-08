@@ -4,22 +4,20 @@ import com.medicus_connect.doctor_booking.model.common.AddEmergencyCaseRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
+import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
 import com.medicus_connect.doctor_booking.repo.EmergencyCaseRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
-import javax.management.Query;
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -30,6 +28,9 @@ public class EmergencyCaseService {
 
     @Autowired
     private EmergencyCaseRepo emergencyCaseRepo;
+
+    @Autowired
+    private AppointmentRepo appointmentRepo;
 
     @Autowired
     private AppointmentService appointmentService;
@@ -53,12 +54,12 @@ public class EmergencyCaseService {
         return "Case Added";
     }
 
-    public LocalTime getEstimatedTime(){
+    public int getDelayTime(EmergencyCaseEntity emergencyCase){
 
         int additionalTime = 30;
-        return LocalTime.now();
+        return additionalTime;
     }
-    public List<EmergencyCaseEntity>  getEmergencyCases(){
+    public List<EmergencyCaseEntity> getEmergencyCases(){
 
         log.info("Fetching the emergency cases that are not send messages yet");
         Calendar calendar = Calendar.getInstance();
@@ -78,19 +79,35 @@ public class EmergencyCaseService {
         Date endOfDay = calendar.getTime();
         return emergencyCaseRepo.findByAdmitDateRangeAndMsgSend(startOfDay, endOfDay,false);
     }
-    public List<AppointmentEntity> getDelayedAppointmentList() {
 
-
-        return null;
-    }
 
     public void sendDelayMessage(){
 
         //Todo Akhil --
+
         //getEmergencyCases
-        //getDelayedAppointmentList
-        //call mail service via kafka
+        log.info("Fetching all emergency cases");
+        List<EmergencyCaseEntity> emergencyCases = getEmergencyCases();
+
+        CompletableFuture.runAsync(()-> {
+
+            emergencyCases.forEach(i->{
+
+                //get delay time -- assume to be get in minutes
+                int minutesDelay = getDelayTime(i);
+                //getDelayedAppointmentList
+                List<AppointmentEntity> delayedAppointments = appointmentService.getDelayedAppointmentList(i.getDoctorId());
+
+                delayedAppointments.forEach(k->{
+
+                    //call mail service via kafka
+
+                    //save new appointment time; -- then only it can be updated in a proper way
+                    k.setStartTime(k.getStartTime().plusMinutes(minutesDelay));
+                    k.setEndTime(k.getEndTime().plusMinutes(minutesDelay));
+                    appointmentRepo.save(k);
+                });
+            });
+        });
     }
-
-
 }
