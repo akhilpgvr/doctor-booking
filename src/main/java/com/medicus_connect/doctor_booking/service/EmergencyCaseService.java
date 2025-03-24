@@ -65,8 +65,9 @@ public class EmergencyCaseService {
 
     public int getDelayTime(EmergencyCaseEntity emergencyCase){
 
-        int additionalTime = 30;
-        return additionalTime;
+        //RestTemplate connection to client
+
+        return 0;
     }
     public List<EmergencyCaseEntity> getEmergencyCases(){
 
@@ -110,6 +111,7 @@ public class EmergencyCaseService {
                     emailData.setPatientName(k.getPatientName());
                     emailData.setDoctorName(i.getDoctorName());
                     emailData.setAppointDate(new Date());
+                    //TODO AKhil --repeated delay issue is ignored
                     emailData.setAppointTime(k.getStartTime().toString());
                     emailData.setNewAppointTime(k.getStartTime().plusMinutes(minutesDelay).toString());
                     request.getEmailDataList().add(emailData);

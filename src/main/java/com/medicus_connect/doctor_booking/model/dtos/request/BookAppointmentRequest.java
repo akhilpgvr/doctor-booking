@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +15,8 @@ public class BookAppointmentRequest {
     private String userId;
     private String patientName;
     private String doctorId;
+    private List<String> primaryObservations;
+    private String disease;
     private Date bookingDate;
     private int startTimeHour;
     private int startTimeMinute;

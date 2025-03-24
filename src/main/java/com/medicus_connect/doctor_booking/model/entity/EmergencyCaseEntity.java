@@ -31,6 +31,7 @@ public class EmergencyCaseEntity {
     private String department;
 
     private List<String> primaryObservations;
+    private String disease;
     private boolean msgSend;
 
     private LocalDateTime createdOn; // admit date is creation date

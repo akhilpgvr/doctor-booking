@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,6 +25,8 @@ public class AppointmentEntity {
     private String userId;
     private String userMailId;
     private String patientName;
+    private List<String> primaryObservations;
+    private String disease;
     private String doctorId;
     private Date bookingDate;
     private LocalTime startTime;
