@@ -66,7 +66,6 @@ public class EmergencyCaseService {
     public int getDelayTime(EmergencyCaseEntity emergencyCase){
 
         //RestTemplate connection to client
-
         return 0;
     }
     public List<EmergencyCaseEntity> getEmergencyCases(){

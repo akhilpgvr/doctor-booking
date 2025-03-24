@@ -3,6 +3,7 @@ package com.medicus_connect.doctor_booking.controller;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
 import com.medicus_connect.doctor_booking.service.AppointmentService;
+import com.medicus_connect.doctor_booking.service.DiseasePredictionService;
 import com.medicus_connect.doctor_booking.service.EmergencyCaseService;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,13 @@ public class UtilityController {
     private EmergencyCaseService emergencyCaseService;
     @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private DiseasePredictionService service;
+
+    @PostMapping("/predict")
+    public String predictDisease(@RequestBody List<String> symptoms) {
+        return service.getPrediction(symptoms);
+    }
 
     @PostMapping("/get-delayed-bookings")
     public ResponseEntity<List<AppointmentEntity>> getDelayedAppointmentList(@RequestBody String doctorIds){
