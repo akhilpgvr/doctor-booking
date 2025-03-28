@@ -1,5 +1,8 @@
 package com.medicus_connect.doctor_booking.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.medicus_connect.doctor_booking.model.common.DiseasePredictionModelResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
 import com.medicus_connect.doctor_booking.service.AppointmentService;
@@ -26,11 +29,14 @@ public class UtilityController {
     @Autowired
     private AppointmentService appointmentService;
     @Autowired
-    private DiseasePredictionService service;
+    private DiseasePredictionService diseasePredictionService;
 
     @PostMapping("/predict")
-    public String predictDisease(@RequestBody List<String> symptoms) {
-        return service.getPrediction(symptoms);
+    public DiseasePredictionModelResponse predictDisease(@RequestBody List<String> symptoms) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String res = diseasePredictionService.getPrediction(symptoms);
+        DiseasePredictionModelResponse response = objectMapper.readValue(res, DiseasePredictionModelResponse.class);
+        return response;
     }
 
     @PostMapping("/get-delayed-bookings")

@@ -1,5 +1,6 @@
 package com.medicus_connect.doctor_booking.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,11 +11,8 @@ import java.util.List;
 @Service
 public class DiseasePredictionService {
 
-    private final RestTemplate restTemplate;
-
-    public DiseasePredictionService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private RestTemplate restTemplate;
 
     public String getPrediction(List<String> symptoms) {
         String baseUrl = "http://127.0.0.1:8000/api/predict-prognosis/";
