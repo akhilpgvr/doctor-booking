@@ -32,6 +32,7 @@ public class AppointmentEntity {
     private Date bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;
+    private boolean hasAppointmentOccurred; //consultation is done or not
 
     private LocalDateTime createdOn;
     private String createdBy;

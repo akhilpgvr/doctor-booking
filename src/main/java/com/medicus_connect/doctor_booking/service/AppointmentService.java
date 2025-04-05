@@ -6,6 +6,7 @@ import com.medicus_connect.doctor_booking.exceptions.SlotNotAvailableException;
 import com.medicus_connect.doctor_booking.model.common.EmailData;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
+import com.medicus_connect.doctor_booking.model.dtos.request.MarkAppointmentOverRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.MessageRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
@@ -15,6 +16,7 @@ import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
 import com.medicus_connect.doctor_booking.service.client.MessagingClient;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.pqc.jcajce.provider.Falcon;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,7 +169,7 @@ public class AppointmentService {
         calendar.setTime(new Date());
 
         //TODO Akhil -- replace start of the day to current time of the day
-        // Set to start of the day (00:00:00)
+        // Set to start of the day (00:00:00)a
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -187,7 +189,49 @@ public class AppointmentService {
         query.addCriteria(Criteria.where("bookingDate").gte(startOfDay).lt(endOfDay));
         log.info("Adding doctorIds for checking criteria");
         query.addCriteria(Criteria.where("doctorId").is(doctorId));
+        query.addCriteria(Criteria.where("hasAppointmentOccurred").is(false));
 
         return mongoTemplate.find(query, AppointmentEntity.class);
+    }
+
+    public String markAppointmentOver(MarkAppointmentOverRequest request) {
+
+
+        log.info("User verification using userId: {}", request.getUserId());
+        getUserByUserId(request.getUserId());
+        log.info("Doctor verification using doctorId: {}", request.getDoctorId());
+        getDoctorByDoctorId(request.getDoctorId());
+
+        LocalTime startTime = LocalTime.of(request.getStartTimeHour(), request.getStartTimeMinute());
+        LocalTime endTime = LocalTime.of(request.getEndTimeHour(), request.getEndTimeMinute());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date startOfDay = calendar.getTime();
+
+        // Set to end of the day (23:59:59)
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        Date endOfDay = calendar.getTime();
+
+        log.info("Fetch appointments for the given day and time for the user: {}, doctor: {}", request.getUserId(), request.getDoctorId());
+        Query query = new Query();
+        query.addCriteria(Criteria.where("userId").is(request.getUserId()));
+        query.addCriteria(Criteria.where("bookingDate").gte(startOfDay).lt(endOfDay));
+        query.addCriteria(new Criteria().andOperator(Criteria.where("startTime").is(startTime), Criteria.where("endTime").is(endTime)));
+        query.addCriteria(Criteria.where("doctorId").is(request.getDoctorId()));
+
+        AppointmentEntity docAvailList = mongoTemplate.find(query, AppointmentEntity.class).get(0);
+        docAvailList.setHasAppointmentOccurred(true);
+
+        appointmentRepo.save(docAvailList);
+
+        return "Marked Appointment Done";
     }
 }

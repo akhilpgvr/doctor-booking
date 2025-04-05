@@ -2,6 +2,7 @@ package com.medicus_connect.doctor_booking.controller;
 
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
+import com.medicus_connect.doctor_booking.model.dtos.request.MarkAppointmentOverRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
 import com.medicus_connect.doctor_booking.service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class BookingController {
         return new ResponseEntity<>(appointmentService.bookDoctor(bookAppointmentRequest), HttpStatus.OK);
     }
 
-    @Operation(summary = "", description = "Endpoint to get list of appointments by month")
+    @Operation(summary = "", description = "Endpoint for user to get list of appointments by month")
     @PostMapping("/get-appoint")
     public ResponseEntity<List<GetAppointmentResponse>> getAppointment(@RequestBody GetAppointmentRequest getAppointmentRequest) {
         return new ResponseEntity<>(appointmentService.getBookings(getAppointmentRequest), HttpStatus.OK);
@@ -37,5 +38,14 @@ public class BookingController {
     @GetMapping("/delete-appoint")
     public ResponseEntity<String> deleteAppointment(String month) {
         return new ResponseEntity<>(appointmentService.deleteAppointment(), HttpStatus.OK);
+    }
+
+
+    //***********************************************************************************************************
+
+    @Operation(summary = "", description = "Endpoint to mark appointment is over for a patient")
+    @PutMapping("/mark-done")
+    public ResponseEntity<String> markAppointmentOver(@RequestBody MarkAppointmentOverRequest markAppointmentOverRequest) {
+        return new ResponseEntity<>(appointmentService.markAppointmentOver(markAppointmentOverRequest), HttpStatus.OK);
     }
 }

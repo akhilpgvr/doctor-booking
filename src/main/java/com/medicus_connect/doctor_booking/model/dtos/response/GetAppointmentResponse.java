@@ -15,6 +15,7 @@ public class GetAppointmentResponse {
     private String userId;
     private String userMailId;
     private String patientName;
+    private int patientAge;
     private String doctorId;
     private Date bookingDate;
     private LocalTime startTime;

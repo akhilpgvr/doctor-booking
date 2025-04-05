@@ -130,7 +130,6 @@ public class EmergencyCaseService {
                     emailData.setPatientName(k.getPatientName());
                     emailData.setDoctorName(i.getDoctorName());
                     emailData.setAppointDate(new Date());
-                    //TODO AKhil --repeated delay issue is ignored --updated on Appointment entity
                     emailData.setAppointTime(k.getStartTime().toString());
                     emailData.setNewAppointTime(k.getStartTime().plusMinutes(modelResponse.get().getEstimated_time()).toString());
                     request.getEmailDataList().add(emailData);
