@@ -14,6 +14,7 @@ public class BookAppointmentRequest {
 
     private String userId;
     private String patientName;
+    private int patientAge;
     private String doctorId;
     private List<String> primaryObservations;
     private String disease;

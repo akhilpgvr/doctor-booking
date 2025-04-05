@@ -1,14 +1,18 @@
 package com.medicus_connect.doctor_booking.service;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.medicus_connect.doctor_booking.enums.MessageContentTypeEnum;
 import com.medicus_connect.doctor_booking.exceptions.SlotNotAvailableException;
+import com.medicus_connect.doctor_booking.model.common.EmailData;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
+import com.medicus_connect.doctor_booking.model.dtos.request.MessageRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetUserResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
 import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
+import com.medicus_connect.doctor_booking.service.client.MessagingClient;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -41,6 +45,9 @@ public class AppointmentService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MessagingClient messagingClient;
+
     public GetUserResponse getUserByUserId(String userId){
         log.info("Calling ProfileClient for user: {}", userId);
         return profileClient.getUserAccount(userId).getBody();
@@ -55,7 +62,7 @@ public class AppointmentService {
         log.info("User verification using userId: {}", request.getUserId());
         GetUserResponse userInfo = getUserByUserId(request.getUserId());
         log.info("Doctor verification using doctorId: {}", request.getDoctorId());
-        getDoctorByDoctorId(request.getDoctorId());
+        GetDoctorResponse doctorInfo = getDoctorByDoctorId(request.getDoctorId());
 
 
         LocalTime startTime = LocalTime.of(request.getStartTimeHour(), request.getStartTimeMinute());
@@ -77,6 +84,19 @@ public class AppointmentService {
         booking.setUpdatedBy(request.getUserId());
         appointmentRepo.save(booking);
         log.info("Appointment created for {}", request.getUserId());
+
+        MessageRequest mailRequest = new MessageRequest();
+        EmailData emailData = new EmailData();
+        emailData.setMailId(booking.getUserMailId());
+        emailData.setPatientName(booking.getPatientName());
+        emailData.setDoctorName(doctorInfo.getDoctorInfo().getName());
+        emailData.setAppointDate(booking.getBookingDate());
+        emailData.setAppointTime(booking.getStartTime().toString());
+        mailRequest.getEmailDataList().add(emailData);
+        mailRequest.setContentCode(MessageContentTypeEnum.SUCCESS.getDescription());
+        messagingClient.sendTextEmail(mailRequest);
+        log.info("Email send to {}", booking.getUserMailId());
+
         return "Appointment Booked";
     }
 
@@ -146,6 +166,7 @@ public class AppointmentService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
+        //TODO Akhil -- replace start of the day to current time of the day
         // Set to start of the day (00:00:00)
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);

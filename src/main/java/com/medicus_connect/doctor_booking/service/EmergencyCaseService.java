@@ -85,7 +85,7 @@ public class EmergencyCaseService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        // Set to start of the day (00:00:00)
+        // TODO Akhil -- Set to current day time (00:00:00)
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -122,15 +122,15 @@ public class EmergencyCaseService {
             //getDelayedAppointmentList
             List<AppointmentEntity> delayedAppointments = appointmentService.getDelayedAppointmentList(i.getDoctorId());
             delayedAppointments.forEach(k -> {
-//                CompletableFuture.runAsync(() -> {
-                    //call mail service via kafka
+                CompletableFuture.runAsync(() -> {
+                    //TODO Akhil -- call mail service via kafka
                     MessageRequest request = new MessageRequest();
                     EmailData emailData = new EmailData();
                     emailData.setMailId(k.getUserMailId());
                     emailData.setPatientName(k.getPatientName());
                     emailData.setDoctorName(i.getDoctorName());
                     emailData.setAppointDate(new Date());
-                    //TODO AKhil --repeated delay issue is ignored
+                    //TODO AKhil --repeated delay issue is ignored --updated on Appointment entity
                     emailData.setAppointTime(k.getStartTime().toString());
                     emailData.setNewAppointTime(k.getStartTime().plusMinutes(modelResponse.get().getEstimated_time()).toString());
                     request.getEmailDataList().add(emailData);
@@ -148,7 +148,7 @@ public class EmergencyCaseService {
                     if(i.getDisease().isBlank()) i.setDisease(modelResponse.get().getPrognosis());
                     emergencyCaseRepo.save(i);
                     log.info("updated msgSend in emergency case entity");
-//                });
+                });
             });
         });
     }
