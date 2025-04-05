@@ -105,10 +105,20 @@ public class AppointmentService {
 
     public List<GetAppointmentResponse> getBookings(GetAppointmentRequest request) {
 
-        log.info("User verification using userId: {}", request.getUserId());
-        getUserByUserId(request.getUserId());
-        log.info("Doctor verification using doctorId: {}", request.getDoctorId());
-        getDoctorByDoctorId(request.getDoctorId());
+        // Build the query
+        Query query = new Query();
+        if(!StringUtil.isNullOrEmpty(request.getUserId())) {
+
+            log.info("User verification using userId: {}", request.getUserId());
+            getUserByUserId(request.getUserId());
+            query.addCriteria(Criteria.where("userId").is(request.getUserId()));
+        }
+        if(!StringUtil.isNullOrEmpty(request.getDoctorId())) {
+
+            log.info("Doctor verification using doctorId: {}", request.getDoctorId());
+            getDoctorByDoctorId(request.getDoctorId());
+            query.addCriteria(Criteria.where("doctorId").is(request.getDoctorId()));
+        }
 
         // Get the current year
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
@@ -134,10 +144,6 @@ public class AppointmentService {
         calendar.set(Calendar.MILLISECOND, 999);
         Date endDate = calendar.getTime();
 
-        // Build the query
-        Query query = new Query();
-        query.addCriteria(Criteria.where("userId").is(request.getUserId()));
-        if(!StringUtil.isNullOrEmpty(request.getDoctorId())) query.addCriteria(Criteria.where("doctorId").is(request.getDoctorId()));
         query.addCriteria(Criteria.where("bookingDate").gte(startDate).lte(endDate));
 
         // Execute the query
