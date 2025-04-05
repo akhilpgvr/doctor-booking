@@ -20,4 +20,5 @@ public class GetAppointmentResponse {
     private Date bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;
+    private boolean hasAppointmentOccurred;
 }
