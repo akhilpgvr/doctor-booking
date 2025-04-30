@@ -28,8 +28,9 @@ public class BookingController {
     @Autowired
     private DiseasePredictionService diseasePredictionService;
 
-    @PostMapping("/suggest-doc-list")
-    public ResponseEntity<String> suggestDocList(@RequestBody List<String> symptoms) throws JsonProcessingException {
+    @Operation(summary = "", description = "Endpoint to get the suggested specialist")
+    @PostMapping("/suggest-specialist")
+    public ResponseEntity<String> suggestSpecialist(@RequestBody List<String> symptoms) throws JsonProcessingException {
 
 
         return new ResponseEntity<>(diseasePredictionService.suggestDocList(symptoms), HttpStatus.OK);
