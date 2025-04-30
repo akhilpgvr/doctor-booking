@@ -1,10 +1,13 @@
 package com.medicus_connect.doctor_booking.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.medicus_connect.doctor_booking.model.common.DiseasePredictionModelResponse;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.MarkAppointmentOverRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetAppointmentResponse;
 import com.medicus_connect.doctor_booking.service.AppointmentService;
+import com.medicus_connect.doctor_booking.service.DiseasePredictionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,18 @@ public class BookingController {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private DiseasePredictionService diseasePredictionService;
+
+    @PostMapping("/suggest-doc-list")
+    public ResponseEntity<String> suggestDocList(@RequestBody List<String> symptoms) throws JsonProcessingException {
+
+
+        return new ResponseEntity<>(diseasePredictionService.suggestDocList(symptoms), HttpStatus.OK);
+    }
+
+    //***********************************************************************************************************//***********************************************************************************************************
 
     @Operation(summary = "", description = "Endpoint to make an appointment")
     @PostMapping("/book-appoint")

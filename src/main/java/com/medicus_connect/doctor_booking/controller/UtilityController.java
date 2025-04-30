@@ -34,9 +34,7 @@ public class UtilityController {
     @PostMapping("/predict")
     public DiseasePredictionModelResponse predictDisease(@RequestBody List<String> symptoms) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String res = diseasePredictionService.getPrediction(symptoms);
-        DiseasePredictionModelResponse response = objectMapper.readValue(res, DiseasePredictionModelResponse.class);
-        return response;
+        return diseasePredictionService.getPrediction(symptoms);
     }
 
     @PostMapping("/get-delayed-bookings")

@@ -75,8 +75,7 @@ public class EmergencyCaseService {
         //RestTemplate connection to client
         ObjectMapper objectMapper = new ObjectMapper();
         log.info("[Prediction Model] -- calling ML model for predicting disease and time");
-        String res = diseasePredictionService.getPrediction(emergencyCase.getPrimaryObservations());
-        return objectMapper.readValue(res, DiseasePredictionModelResponse.class);
+        return diseasePredictionService.getPrediction(emergencyCase.getPrimaryObservations());
     }
 
     public List<EmergencyCaseEntity> getEmergencyCases(){
