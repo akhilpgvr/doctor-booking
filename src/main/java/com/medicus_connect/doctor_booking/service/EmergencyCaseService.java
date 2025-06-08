@@ -51,6 +51,9 @@ public class EmergencyCaseService {
     @Autowired
     private DiseasePredictionService diseasePredictionService;
 
+    @Autowired
+    private GPSService gpsService;
+
 
     public String addEmergencyCases(AddEmergencyCaseRequest request) {
 
@@ -149,5 +152,12 @@ public class EmergencyCaseService {
                 });
             });
         });
+    }
+
+    public String alertEmergencyCase(String locationMeta, String vehicleNo) {
+
+        log.info("Convert the location metadata: {}", locationMeta);
+        String location = gpsService.convertGPGGAtoGoogleMapsUrl(locationMeta);
+        return location;
     }
 }

@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -26,6 +23,15 @@ public class EmergencyCasesController {
 
         log.info("Calling Emergency to save new case for: {}, doctor: {}", addEmergencyCaseRequest.getPatientName(), addEmergencyCaseRequest.getDoctorId());
         return new ResponseEntity<>(emergencyCaseService.addEmergencyCases(addEmergencyCaseRequest), HttpStatus.OK);
+    }
+
+    @Operation(summary = "An endpoint to alert EmergencyCase", description = "")
+    @PostMapping("/alert")
+    public ResponseEntity<String> alertEmergencyCase(@RequestParam String location, @RequestParam String vehicleNo){
+
+        log.info("Emergency alert for the vehicle: {}", vehicleNo); // Anyone can travel in the vehicle there is no fixed users. Module is set in vehicle.
+        // ToDO Akhil -- Therefore use vehicleNo instead of person to identify the accident. Later on update to the Emergency log
+        return new ResponseEntity<>(emergencyCaseService.alertEmergencyCase(location, vehicleNo), HttpStatus.OK);
     }
 
 }
