@@ -16,7 +16,6 @@ import com.medicus_connect.doctor_booking.repo.AppointmentRepo;
 import com.medicus_connect.doctor_booking.service.client.MessagingClient;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.pqc.jcajce.provider.Falcon;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

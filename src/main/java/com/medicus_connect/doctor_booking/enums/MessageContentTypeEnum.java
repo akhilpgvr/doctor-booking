@@ -4,7 +4,8 @@ public enum MessageContentTypeEnum {
 
     DELAY("delay"),
     CANCELLATION("cancellation"),
-    SUCCESS("success");
+    SUCCESS("success"),
+    ALERT("alert");
 
     private final String description;
 

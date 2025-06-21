@@ -7,7 +7,6 @@ import com.medicus_connect.doctor_booking.exceptions.DiseasePredictionException;
 import com.medicus_connect.doctor_booking.model.common.AddEmergencyCaseRequest;
 import com.medicus_connect.doctor_booking.model.common.DiseasePredictionModelResponse;
 import com.medicus_connect.doctor_booking.model.common.EmailData;
-import com.medicus_connect.doctor_booking.model.dtos.request.HospitalEmergencyRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.MessageRequest;
 import com.medicus_connect.doctor_booking.model.dtos.response.GetDoctorResponse;
 import com.medicus_connect.doctor_booking.model.entity.AppointmentEntity;
@@ -22,14 +21,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.medicus_connect.doctor_booking.Utils.EMERGENCY_HOSP_DATA_FILE_PATH;
 
 @Slf4j
 @Service
@@ -154,88 +152,5 @@ public class EmergencyCaseService {
                 });
             });
         });
-    }
-
-    public String alertEmergencyCase(String locationMeta, String vehicleNo) {
-
-        log.info("Convert the location metadata: {}", locationMeta);
-        String location = gpsService.convertGPGGAtoGoogleMapsUrl(locationMeta);
-        return location;
-    }
-
-    public String addEmergencyHospital(List<HospitalEmergencyRequest> request) {
-
-        File file = new File(EMERGENCY_HOSP_DATA_FILE_PATH);
-
-        try {
-            boolean fileExists = file.exists();
-
-            // Create file and write header if it doesn't exist
-            if (!fileExists) {
-                try (FileWriter fw = new FileWriter(file, true)) {
-                    fw.write("Hospital Name,Email\n");
-                }
-            }
-
-            // Read existing lines
-            Set<String> existingLines = new HashSet<>();
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    existingLines.add(line.trim());
-                }
-            }
-
-            // Collect new entries
-            List<String> newEntries = new ArrayList<>();
-            for (HospitalEmergencyRequest i : request) {
-                String newEntry = i.getName().trim() + "," + i.getEmail().trim();
-                if (!existingLines.contains(newEntry)) {
-                    newEntries.add(newEntry);
-                }
-            }
-
-            // Write all new entries at once
-            if (!newEntries.isEmpty()) {
-                try (FileWriter fw = new FileWriter(file, true)) {
-                    for (String entry : newEntries) {
-                        fw.write(entry + "\n");
-                    }
-                }
-            }
-
-            return "Hospital added successfully.";
-
-        } catch (IOException e) {
-            return "Error: " + e.getMessage();
-        }
-    }
-
-
-    public List<String> getEmergencyHospital() {
-
-        File file = new File(EMERGENCY_HOSP_DATA_FILE_PATH);
-
-        try {
-            boolean fileExists = file.exists();
-
-            // Create file and write header if it doesn't exist
-            if (!fileExists) {
-                throw new RuntimeException("Data Not Present");
-            }
-
-            // Check if already exists (optional)
-            List<String> lines = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    lines.add(line.trim());
-                }
-            }
-            return lines;
-
-        } catch (IOException e) {
-            return Collections.singletonList("Error: " + e.getMessage());
-        }
     }
 }

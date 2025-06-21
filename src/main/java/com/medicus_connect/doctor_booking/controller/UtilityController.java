@@ -8,6 +8,7 @@ import com.medicus_connect.doctor_booking.model.entity.EmergencyCaseEntity;
 import com.medicus_connect.doctor_booking.service.AppointmentService;
 import com.medicus_connect.doctor_booking.service.DiseasePredictionService;
 import com.medicus_connect.doctor_booking.service.EmergencyCaseService;
+import com.medicus_connect.doctor_booking.service.IOTAlertService;
 import com.medicus_connect.doctor_booking.service.client.ProfileMgmtClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class UtilityController {
     private AppointmentService appointmentService;
     @Autowired
     private DiseasePredictionService diseasePredictionService;
+    @Autowired
+    private IOTAlertService iotAlertService;
 
     @PostMapping("/predict")
     public DiseasePredictionModelResponse predictDisease(@RequestBody List<String> symptoms) throws JsonProcessingException {
@@ -51,5 +54,10 @@ public class UtilityController {
     public ResponseEntity<String> sendDelayMsg(){
         emergencyCaseService.sendDelayMessage();
         return new ResponseEntity<>("Message Send", HttpStatus.OK);
+    }
+
+    @GetMapping("/getEmailByHospitalName")
+    public ResponseEntity<String> getEmailByHospitalName(String hospName){
+        return new ResponseEntity<>(iotAlertService.getEmailByHospitalName(hospName), HttpStatus.OK);
     }
 }

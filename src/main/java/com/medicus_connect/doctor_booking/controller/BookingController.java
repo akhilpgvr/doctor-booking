@@ -1,7 +1,6 @@
 package com.medicus_connect.doctor_booking.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.medicus_connect.doctor_booking.model.common.DiseasePredictionModelResponse;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.GetAppointmentRequest;
 import com.medicus_connect.doctor_booking.model.dtos.request.MarkAppointmentOverRequest;

@@ -17,4 +17,8 @@ public class EmailData {
     private Date appointDate;
     private String appointTime;
     private String newAppointTime;
+
+    //emergency
+    private String location;
+    private String vehicleNo;
 }
