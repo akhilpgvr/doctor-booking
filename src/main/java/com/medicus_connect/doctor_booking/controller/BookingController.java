@@ -50,7 +50,7 @@ public class BookingController {
     }
 
     @Operation(summary = "", description = "Endpoint to delete an appointment")
-    @GetMapping("/delete-appoint")
+    @DeleteMapping("/delete-appoint")
     public ResponseEntity<String> deleteAppointment(String month) {
         return new ResponseEntity<>(appointmentService.deleteAppointment(), HttpStatus.OK);
     }

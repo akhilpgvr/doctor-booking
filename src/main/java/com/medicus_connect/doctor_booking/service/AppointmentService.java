@@ -2,6 +2,7 @@ package com.medicus_connect.doctor_booking.service;
 
 import ch.qos.logback.core.util.StringUtil;
 import com.medicus_connect.doctor_booking.enums.MessageContentTypeEnum;
+import com.medicus_connect.doctor_booking.exceptions.InsufficientDataException;
 import com.medicus_connect.doctor_booking.exceptions.SlotNotAvailableException;
 import com.medicus_connect.doctor_booking.model.common.EmailData;
 import com.medicus_connect.doctor_booking.model.dtos.request.BookAppointmentRequest;
@@ -106,12 +107,14 @@ public class AppointmentService {
 
         // Build the query
         Query query = new Query();
-        if(!StringUtil.isNullOrEmpty(request.getUserId())) {
-
-            log.info("User verification using userId: {}", request.getUserId());
-            getUserByUserId(request.getUserId());
-            query.addCriteria(Criteria.where("userId").is(request.getUserId()));
+        if(StringUtil.isNullOrEmpty(request.getUserId())) {
+            log.error("UserID missing or not filled");
+            throw new InsufficientDataException("UserID is missing, please fill the UserID");
         }
+        log.info("User verification using userId: {}", request.getUserId());
+        getUserByUserId(request.getUserId());
+        query.addCriteria(Criteria.where("userId").is(request.getUserId()));
+
         if(!StringUtil.isNullOrEmpty(request.getDoctorId())) {
 
             log.info("Doctor verification using doctorId: {}", request.getDoctorId());
