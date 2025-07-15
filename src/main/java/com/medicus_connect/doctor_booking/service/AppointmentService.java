@@ -176,8 +176,6 @@ public class AppointmentService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        //TODO Akhil -- replace start of the day to current time of the day
-        // Set to start of the day (00:00:00)a
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

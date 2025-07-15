@@ -24,7 +24,7 @@ public class IOTAlertController {
     public ResponseEntity<String> alertEmergencyCase(@RequestParam String location, @RequestParam String hospital, @RequestParam String vehicleNo){
 
         log.info("Emergency alert for the vehicle: {}", vehicleNo); // Anyone can travel in the vehicle there is no fixed users. Module is set in vehicle.
-        // ToDO Akhil -- Therefore use vehicleNo instead of person to identify the accident. Later on update to the Emergency log
+        //Therefore use vehicleNo instead of person to identify the accident. Later on update to the Emergency log
         return new ResponseEntity<>(iotAlertService.alertEmergencyCase(location, hospital, vehicleNo), HttpStatus.OK);
     }
 
@@ -39,10 +39,10 @@ public class IOTAlertController {
 
     @Operation(summary = "An endpoint to get Emergency Case Hospital contact info", description = "")
     @GetMapping("/get/emer-hos-data")
-    public ResponseEntity<List<String>> getEmergencyHospital() {
+    public ResponseEntity<List<String>> getEmergencyHospital(@RequestParam (required = false) String hospitalName) {
 
         log.info("get Emergency Case Hospital contact info");
 
-        return new ResponseEntity<>(iotAlertService.getEmergencyHospitalDetails(), HttpStatus.OK);
+        return new ResponseEntity<>(iotAlertService.getEmergencyHospitalDetails(hospitalName), HttpStatus.OK);
     }
 }

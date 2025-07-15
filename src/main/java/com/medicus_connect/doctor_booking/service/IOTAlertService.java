@@ -116,24 +116,25 @@ public class IOTAlertService {
     }
 
 
-    public List<String> getEmergencyHospitalDetails() {
+    public List<String> getEmergencyHospitalDetails(String hospName) {
 
         File file = new File(EMERGENCY_HOSP_DATA_FILE_PATH);
 
         try {
-            boolean fileExists = file.exists();
-
-            // Create file and write header if it doesn't exist
-            if (!fileExists) {
+            if (!file.exists()) {
                 throw new RuntimeException("Data Not Present");
             }
 
-            // Check if already exists (optional)
             List<String> lines = new ArrayList<>();
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                    lines.add(line.trim());
+                    line = line.trim();
+
+                    // Filter if hospName is provided
+                    if (hospName == null || hospName.isEmpty() || line.toLowerCase().contains(hospName.toLowerCase())) {
+                        lines.add(line);
+                    }
                 }
             }
             return lines;
@@ -142,4 +143,5 @@ public class IOTAlertService {
             return Collections.singletonList("Error: " + e.getMessage());
         }
     }
+
 }
